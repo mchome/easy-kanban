@@ -1,0 +1,24 @@
+{
+  "name": "easy-kanban",
+  "version": "0.0.0",
+  "scripts": {
+    "dev": "cross-env NODE_ENV=production node app/app.js",
+    "start": "cross-env NODE_ENV=production node app/app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mchome/easy-kanban.git"
+  },
+  "keywords": [
+    "kanban"
+  ],
+  "author": "fuyumi",
+  "devDependencies": {
+    "cross-env": "^5.0.1"
+  },
+  "dependencies": {
+    "koa": "^2.3.0",
+    "koa-bodyparser": "^4.2.0",
+    "koa-router": "^7.2.1"
+  }
+}
