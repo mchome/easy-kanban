@@ -2,7 +2,7 @@
   "name": "easy-kanban",
   "version": "0.0.0",
   "scripts": {
-    "dev": "cross-env NODE_ENV=production node app/app.js",
+    "dev": "cross-env NODE_ENV=development node app/app.js",
     "start": "cross-env NODE_ENV=production node app/app.js"
   },
   "repository": {
@@ -13,12 +13,14 @@
     "kanban"
   ],
   "author": "fuyumi",
-  "devDependencies": {
-    "cross-env": "^5.0.1"
-  },
   "dependencies": {
     "koa": "^2.3.0",
     "koa-bodyparser": "^4.2.0",
-    "koa-router": "^7.2.1"
+    "koa-router": "^7.2.1",
+    "koa-views": "^6.0.2"
+  },
+  "devDependencies": {
+    "cross-env": "^5.0.1",
+    "standard": "^10.0.2"
   }
 }
