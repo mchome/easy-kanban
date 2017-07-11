@@ -5,13 +5,14 @@
       <img v-if="picture_url.length" class="auth-picture" src="picture_url">
 
       <div class="login-card" v-if="!logged_in">
-        <input type="text" v-model="login.account">
-        <input type="text" v-model="login.password">
+        <input type="text" v-model="login.account" placeholder="Account" spellcheck="false">
+        <input type="text" v-model="login.password" placeholder="Password" spellcheck="false">
+        <div class="submit-btn"><p>Login</p></div>
       </div>
       <!--<div class="signup-card" v-if="!logged_in">
-        <img src="">
-        <input type="text" v-model="signup.account">
-        <input type="text" v-model="signup.password">
+        <input type="text" v-model="signup.account" placeholder="Account" spellcheck="false">
+        <input type="text" v-model="signup.password" placeholder="Password" spellcheck="false">
+        <div class="submit-btn"><p>Signup</p></div>
       </div>-->
     </div>
   </div>
@@ -48,19 +49,22 @@ export default {
   overflow: hidden;
 }
 .auth-container .auth-picture {
-  height: 72px;
-  width: 72px;
-  font-size: 72px;
+  height: 80px;
+  width: 80px;
+  font-size: 80px;
   cursor: default;
-  margin: 2rem 0;
+  margin: 1.6rem 0;
+}
+.auth-card > i {
+  color: #35495E;
 }
 .auth-card {
   display: flex;
   flex-direction: column;
   width: 25%;
   height: 50%;
-  min-height: 15rem;
   min-width: 15rem;
+  min-height: 18rem;
   background-color: white;
   align-items: center;
   box-shadow: 0 2px 2px 0 rgba(0,0,0,.14), 0 3px 1px -2px rgba(0,0,0,.2), 0 1px 5px 0 rgba(0,0,0,.12);
@@ -69,10 +73,54 @@ export default {
   display: flex;
   flex-direction: column;
   background-color: white;
-  width: 50%;
+  width: 70%;
+  align-items: center;
 }
-.login-card > input, .signin-card > input {
+.login-card input:nth-child(1) {
+  margin-top: -0.5rem;
+}
+.login-card input, .signin-card input {
   margin: 0.6rem 0;
+  border: 0px;
+  border-bottom: 1px solid #bbbbbb;
+  font-size: 1.2rem;
+  width: 100%;
+  color: green;
+  padding-top: 1rem;
+  margin: 0.3rem 0;
+}
+.login-card input::-webkit-input-placeholder, .signin-card input::-webkit-input-placeholder {
+  position: relative;
+  top: 0;
+  font-weight: lighter;
+  transition: all 0.2s;
+}
+.login-card input:focus::-webkit-input-placeholder, .signin-card input:focus::-webkit-input-placeholder {
+  position: relative;
+  top: -1.2rem;
+  z-index: 1;
+  font-size: 0.8rem;
+  font-weight: normal;
+  transition: all 0.2s;
+  color: #35495E;
+}
+.login-card input:focus, .signin-card input:focus {
+  outline: none;
+}
+.submit-btn {
+  margin-top: 1rem;
+  width: 6rem;
+  height: 2rem;
+  background-color: #35495E;
+  color: white;
+  cursor: pointer;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.12), 0 1px 2px 0 rgba(0, 0, 0, 0.24);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.submit-btn p {
+  font-size: 0.85rem;
 }
 .logged-in {
   background-color: transparent;

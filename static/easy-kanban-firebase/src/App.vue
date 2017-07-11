@@ -20,11 +20,10 @@ body {
   margin: 0;
 }
 
-#app {
+* {
   font-family: 'Avenir', Roboto, Helvetica, "Segoe UI", "Microsoft YaHei", Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  color: #2c3e50;
 }
 
 header {
