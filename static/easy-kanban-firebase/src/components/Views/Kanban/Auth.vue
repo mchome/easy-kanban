@@ -1,19 +1,21 @@
 <template>
-  <div class="auth-container">
-    <div class="auth-card" :class="{'logged-in': logged_in}">
+  <div class="auth-container" :class="{'logged-in-container': logged_in}">
+    <div class="auth-card" :class="{'logged-in-card': logged_in}">
       <i v-if="!picture_url.length" class="auth-picture material-icons">account_circle</i>
       <img v-if="picture_url.length" class="auth-picture" src="picture_url">
 
-      <div class="login-card" v-if="!logged_in">
-        <input type="text" v-model="login.account" placeholder="Account" spellcheck="false">
-        <input type="text" v-model="login.password" placeholder="Password" spellcheck="false">
-        <div class="submit-btn"><p>Login</p></div>
-      </div>
-      <!--<div class="signup-card" v-if="!logged_in">
-        <input type="text" v-model="signup.account" placeholder="Account" spellcheck="false">
-        <input type="text" v-model="signup.password" placeholder="Password" spellcheck="false">
-        <div class="submit-btn"><p>Signup</p></div>
-      </div>-->
+      <transition name="fade">
+        <div class="login-card" v-if="!logged_in">
+          <input type="text" v-model="login.account" placeholder="Account" spellcheck="false">
+          <input type="text" v-model="login.password" placeholder="Password" spellcheck="false">
+          <div class="submit-btn"><p>Login</p></div>
+        </div>
+        <!--<div class="signup-card" v-if="!logged_in">
+          <input type="text" v-model="signup.account" placeholder="Account" spellcheck="false">
+          <input type="text" v-model="signup.password" placeholder="Password" spellcheck="false">
+          <div class="submit-btn"><p>Signup</p></div>
+        </div>-->
+      </transition>
     </div>
   </div>
 </template>
@@ -33,20 +35,23 @@ export default {
       }
     }
   },
-  props: ['logged_in']
+  props: ['logged_in'],
+  methods: {
+  }
 }
 </script>
-
 
 <style>
 .auth-container {
   height: 100%;
+  width: 100%;
   background-color: #eeeeee;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   overflow: hidden;
+  transition: all 0.5s;
 }
 .auth-container .auth-picture {
   height: 80px;
@@ -54,6 +59,9 @@ export default {
   font-size: 80px;
   cursor: default;
   margin: 1.6rem 0;
+  position: relative;
+  top: 0;
+  transition: all 0.5s;
 }
 .auth-card > i {
   color: #35495E;
@@ -122,8 +130,32 @@ export default {
 .submit-btn p {
   font-size: 0.85rem;
 }
-.logged-in {
+.logged-in-container {
+  width: 60px;
+  transition: all 0.5s;
+  background-color: rgba(53, 73, 94, 0.95);
+}
+.logged-in-card {
   background-color: transparent;
   box-shadow: none;
+}
+.logged-in-card > i {
+  color: white;
+}
+.logged-in-card > i, .logged-in-card > img {
+  position: absolute !important;
+  top: calc(100vh - 76px) !important;
+  transition: all 0.5s !important;
+  width: 40px !important;
+  height: 40px !important;
+  font-size: 40px !important;
+  margin-bottom: 0 !important;
+}
+
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .1s
+}
+.fade-enter, .fade-leave-to {
+  opacity: 0
 }
 </style>
