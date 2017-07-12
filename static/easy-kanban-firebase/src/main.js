@@ -7,6 +7,7 @@ import router from './router'
 Vue.config.productionTip = false
 
 import '@/fonts/material-design-icons/material-icons.css'
+import 'dragscroll'
 
 /* eslint-disable no-new */
 new Vue({

@@ -1648,6 +1648,10 @@ dot-prop@^3.0.0:
   dependencies:
     is-obj "^1.0.0"
 
+dragscroll@^0.0.8:
+  version "0.0.8"
+  resolved "http://registry.npm.taobao.org/dragscroll/download/dragscroll-0.0.8.tgz#de4771e5f3a14d77b583ecef5d38bd9618f27563"
+
 duplexer2@^0.1.4:
   version "0.1.4"
   resolved "http://registry.npm.taobao.org/duplexer2/download/duplexer2-0.1.4.tgz#8b12dab878c0d69e3e7891051662a32fc6bddcc1"

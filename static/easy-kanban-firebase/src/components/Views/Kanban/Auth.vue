@@ -6,12 +6,12 @@
 
       <transition name="fade">
         <div class="login-card" v-if="!logged_in">
-          <input type="text" v-model="login.account" placeholder="Account" spellcheck="false">
+          <input type="text" v-model="login.email" placeholder="Email" spellcheck="false">
           <input type="text" v-model="login.password" placeholder="Password" spellcheck="false">
           <div class="submit-btn"><p>Login</p></div>
         </div>
         <!--<div class="signup-card" v-if="!logged_in">
-          <input type="text" v-model="signup.account" placeholder="Account" spellcheck="false">
+          <input type="text" v-model="signup.email" placeholder="Account" spellcheck="false">
           <input type="text" v-model="signup.password" placeholder="Password" spellcheck="false">
           <div class="submit-btn"><p>Signup</p></div>
         </div>-->
@@ -26,11 +26,11 @@ export default {
     return {
       picture_url: '',
       login: {
-        account: '',
+        email: '',
         password: ''
       },
       signup: {
-        account: '',
+        email: '',
         password: ''
       }
     }
@@ -150,6 +150,7 @@ export default {
   height: 40px !important;
   font-size: 40px !important;
   margin-bottom: 0 !important;
+  cursor: pointer !important;
 }
 
 .fade-enter-active, .fade-leave-active {

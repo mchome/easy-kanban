@@ -26,6 +26,20 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+*::-webkit-scrollbar-thumb {
+	background-color: rgba(53, 73, 94, 0.95);
+  border-radius: 5px;
+}
+*::-webkit-scrollbar-track {
+	background-color: #F5F5F5;
+  margin: 8px;
+}
+*::-webkit-scrollbar {
+	width: 10px;
+  height: 10px;
+	background-color: #F5F5F5;
+}
+
 header {
   margin: 0;
   height: 56px;
