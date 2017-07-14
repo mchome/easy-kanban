@@ -3,10 +3,12 @@
     <auth :logged_in="logged_in"></auth>
     <div class="kanban-wrapper" v-if="logged_in">
       <filters :filter.sync="filter"></filters>
-      <draggable class="boards-container dragscroll" nochilddrag>
+      <div class="boards-container">
         <div class="margin"></div>
-        <board v-for="board in kanban_data" :key="board.id" :filter="filter" :board="board"></board>
-      </draggable>
+        <draggable :list="kanban_data" class="dragscroll" nochilddrag>
+          <board v-for="board in kanban_data" :key="board.id" :filter="filter" :board="board"></board>
+        </draggable>
+      </div>
     </div>
   </div>
 </template>
@@ -29,9 +31,9 @@ export default {
       logged_in: true,
       filter: '',
       kanban_data: [
-        {header: 'Todo', data: []},
-        {header: 'Doing', data: []},
-        {header: 'Done', data: []},
+        {header: 'Todo', data: [{tag: '', info: 'aaa'}, {tag: '', info: 'bbb'}]},
+        {header: 'Doing', data: [{tag: '', info: 'ccc'}, {tag: '', info: 'ddd'}]},
+        {header: 'Done', data: [{tag: '', info: 'eee'}, {tag: '', info: 'fff'}]},
         {header: 'Duplicate', data: []},
         {header: 'Backlog', data: []}
       ]
@@ -55,6 +57,11 @@ export default {
 .boards-container {
   width: 100%;
   height: calc(100% - 70px);
+  display: flex;
+  flex-direction: row;
+}
+.boards-container > .dragscroll {
+  height: 100%;
   display: flex;
   flex-direction: row;
   align-items: flex-start;

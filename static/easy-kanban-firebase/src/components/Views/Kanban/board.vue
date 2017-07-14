@@ -5,6 +5,9 @@
         <p>{{ board.header }}</p>
         <i class="material-icons">more_vert</i>
       </div>
+      <draggable :list="board.data" class="board-list">
+        <div class="data-container" v-for="data in board.data" :key="data.id">{{ data.info }}</div>
+      </draggable>
     </div>
     <div class="margin"></div>
     <!-- <colorpicker></colorpicker> -->
@@ -12,10 +15,12 @@
 </template>
 
 <script>
+import draggable from 'vuedraggable'
 import colorpicker from '@/components/Common/colorpicker.vue'
 
 export default {
   components: {
+    draggable,
     colorpicker
   },
   props: ['filter', 'board'],
@@ -62,5 +67,14 @@ export default {
   cursor: pointer;
   margin-right: 1rem;
   width: 24px;
+}
+.board-list {
+  background-color: white;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.board-list > .data-container {
+  height: 3rem;
 }
 </style>
