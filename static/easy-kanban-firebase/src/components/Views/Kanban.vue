@@ -6,8 +6,9 @@
       <div class="boards-container">
         <div class="margin"></div>
         <draggable :list="kanban_data" class="dragscroll" nochilddrag>
-          <board v-for="board in kanban_data" :key="board.id" :filter="filter" :board="board"></board>
+          <board v-for="board in kanban_data" :key="board.id" :filter="filter" :board="board" :kanban="kanban_data"></board>
         </draggable>
+        <!-- <colorpicker></colorpicker> -->
       </div>
     </div>
   </div>
@@ -18,13 +19,15 @@ import auth from './Kanban/auth'
 import filters from './Kanban/filters'
 import board from './Kanban/board'
 import draggable from 'vuedraggable'
+import colorpicker from '@/components/Common/colorpicker.vue'
 
 export default {
   components: {
     auth,
     board,
     filters,
-    draggable
+    draggable,
+    colorpicker
   },
   data () {
     return {
@@ -38,6 +41,9 @@ export default {
         {header: 'Backlog', data: []}
       ]
     }
+  },
+  methods: {
+
   }
 }
 </script>
