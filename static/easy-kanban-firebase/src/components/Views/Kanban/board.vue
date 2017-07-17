@@ -7,7 +7,7 @@
       </div>
       <draggable :list="board.data" class="board-list" :options="{ group: 'kanban' }">
         <div class="data-container" v-for="data in board.data" :key="data.id">
-          <div class="data-tag" v-if="data.tag.length">{{ data.tag }}</div>
+          <div class="data-tag" v-for="tag in data.tag" :key="tag.id" v-if="tag">{{ tag }}</div>
           <span class="data-title">{{ data.title }}</span>
         </div>
       </draggable>
@@ -86,10 +86,11 @@ export default {
   color: rgba(255, 255, 255, 0.7);
 }
 .board-list {
-  width: 90%;
+  width: 93%;
   display: flex;
   flex-direction: column;
   overflow: auto;
+  border-radius: 3px;
 }
 .board-list > .data-container {
   background-color: white;
@@ -99,6 +100,9 @@ export default {
 }
 .data-container:hover {
   background-color: #eeeeee;
+}
+.data-container:last-child {
+  margin-bottom: 0;
 }
 .data-tag {
   background-color: #80D5DB;
@@ -121,12 +125,20 @@ export default {
 }
 .board-add-btn {
   color: white;
-  margin: 10px 0;
+  background-color: transparent;
+  margin: 5px 0;
+  padding: 5px 0;
   cursor: pointer;
-  transition: 0.3s all;
+  transition: 0.5s all;
+  width: 50%;
+  display: flex;
+  justify-content: center;
+  border-radius: 10px;
+  min-height: 1rem;
 }
 .board-add-btn:hover {
   color: rgba(255, 255, 255, 0.7);
+  background-color: rgba(255, 255, 255, 0.2);
 }
 
 .board-list > .sortable-ghost {

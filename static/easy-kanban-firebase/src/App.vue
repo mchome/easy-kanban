@@ -46,6 +46,7 @@ header {
   padding: 0 16px 0 24px;
   background-color: #35495E;
   color: #ffffff;
+  user-select: none;
 }
 
 header span {

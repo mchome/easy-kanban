@@ -1,26 +1,31 @@
 <template>
   <div class="auth-container" :class="{'logged-in-container': logged_in}">
     <div class="auth-card" :class="{'logged-in-card': logged_in}">
-      <i v-if="!picture_url.length" class="auth-picture material-icons">account_circle</i>
-      <img v-if="picture_url.length" class="auth-picture" src="picture_url">
+      <i v-if="!picture_url.length" @click="toggleDologin" class="auth-picture material-icons">account_circle</i>
+      <img v-if="picture_url.length" @click="toggleDologin" class="auth-picture" :src="picture_url">
 
       <transition name="fade">
-        <div class="login-card" v-if="!logged_in">
+        <div class="login-card" v-if="!logged_in && isDologin">
           <input type="text" v-model="login.email" placeholder="Email" spellcheck="false">
-          <input type="text" v-model="login.password" placeholder="Password" spellcheck="false">
-          <div class="submit-btn"><p>Login</p></div>
+          <input type="password" v-model="login.password" placeholder="Password" spellcheck="false">
+          <div class="submit-btn" ref="submitbtn" @click="doLogin"><p>Login</p></div>
         </div>
-        <!--<div class="signup-card" v-if="!logged_in">
+        <div class="signup-card" v-if="!logged_in && !isDologin">
           <input type="text" v-model="signup.email" placeholder="Account" spellcheck="false">
-          <input type="text" v-model="signup.password" placeholder="Password" spellcheck="false">
-          <div class="submit-btn"><p>Signup</p></div>
-        </div>-->
+          <input type="password" v-model="signup.password" placeholder="Password" spellcheck="false">
+          <div class="submit-btn" @click="doSignup"><p>Signup</p></div>
+        </div>
+      </transition>
+      <transition name="fade">
+        <div class="popup-msg" v-if="popup.msg.length">{{ popup.msg }}</div>
       </transition>
     </div>
   </div>
 </template>
 
 <script>
+import { Firebase, getAvatar } from '@/utils'
+
 export default {
   data () {
     return {
@@ -32,11 +37,57 @@ export default {
       signup: {
         email: '',
         password: ''
+      },
+      isDologin: true,
+      popup: {
+        msg: ''
       }
     }
   },
   props: ['logged_in'],
   methods: {
+    doLogin: function (ev) {
+      Firebase.auth().signInWithEmailAndPassword(this.login.email, this.login.password)
+        .then(function () {
+          this.picture_url = getAvatar(this.login.email)
+          this.updateAuth(true)
+        }.bind(this))
+        .catch(function (ev) { this.popup.msg = ev.message }.bind(this))
+    },
+    doSignup: function (ev) {
+      Firebase.auth().createUserWithEmailAndPassword(this.signup.email, this.signup.password)
+        .then(function () {
+          this.popup.msg = 'You have successfully registered !'
+          this.isDologin = true
+        }.bind(this))
+        .catch(function (ev) { this.popup.msg = ev.message }.bind(this))
+    },
+    toggleDologin: function () {
+      this.isDologin = !this.isDologin
+    },
+    updateAuth: function (isLogin) {
+      if (isLogin) {
+        this.$refs.submitbtn.style.background = '#23d160'
+        this.$refs.submitbtn.textContent = 'Succeed'
+        setTimeout(function () {
+          this.$emit('update:logged_in', true)
+          this.$refs.submitbtn.style.background = '#35495E'
+          this.$refs.submitbtn.textContent = 'Login'
+        }.bind(this), 1000)
+      } else {
+        this.$emit('update:logged_in', false)
+      }
+    }
+  },
+  watch: {
+    popup: {
+      handler: function () {
+        setTimeout(function () {
+          this.popup.msg = ''
+        }.bind(this), 5000)
+      },
+      deep: true
+    }
   }
 }
 </script>
@@ -44,13 +95,12 @@ export default {
 <style>
 .auth-container {
   height: 100%;
-  width: 100%;
+  min-width: 100%;
   background-color: #eeeeee;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  overflow: hidden;
   transition: all 0.5s;
 }
 .auth-container .auth-picture {
@@ -62,6 +112,9 @@ export default {
   position: relative;
   top: 0;
   transition: all 0.5s;
+  cursor: pointer;
+  border-radius: 50px;
+  user-select: none;
 }
 .auth-card > i {
   color: #35495E;
@@ -77,17 +130,17 @@ export default {
   align-items: center;
   box-shadow: 0 2px 2px 0 rgba(0,0,0,.14), 0 3px 1px -2px rgba(0,0,0,.2), 0 1px 5px 0 rgba(0,0,0,.12);
 }
-.login-card, .signin-card {
+.login-card, .signup-card {
   display: flex;
   flex-direction: column;
   background-color: white;
   width: 70%;
   align-items: center;
 }
-.login-card input:nth-child(1) {
+.login-card input:nth-child(1), .signup-card input:nth-child(1) {
   margin-top: -0.5rem;
 }
-.login-card input, .signin-card input {
+.login-card input, .signup-card input {
   margin: 0.6rem 0;
   border: 0px;
   border-bottom: 1px solid #bbbbbb;
@@ -97,13 +150,13 @@ export default {
   padding-top: 1rem;
   margin: 0.3rem 0;
 }
-.login-card input::-webkit-input-placeholder, .signin-card input::-webkit-input-placeholder {
+.login-card input::-webkit-input-placeholder, .signup-card input::-webkit-input-placeholder {
   position: relative;
   top: 0;
   font-weight: lighter;
   transition: all 0.2s;
 }
-.login-card input:focus::-webkit-input-placeholder, .signin-card input:focus::-webkit-input-placeholder {
+.login-card input:focus::-webkit-input-placeholder, .signup-card input:focus::-webkit-input-placeholder {
   position: relative;
   top: -1.2rem;
   z-index: 1;
@@ -112,7 +165,7 @@ export default {
   transition: all 0.2s;
   color: #35495E;
 }
-.login-card input:focus, .signin-card input:focus {
+.login-card input:focus, .signup-card input:focus {
   outline: none;
 }
 .submit-btn {
@@ -126,14 +179,19 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: all 0.3s;
+  user-select: none;
+}
+.submit-btn:active {
+  background-color: rgba(53, 73, 94, 0.8);
 }
 .submit-btn p {
   font-size: 0.85rem;
 }
 .logged-in-container {
-  width: 60px;
-  transition: all 0.5s;
+  min-width: 60px;
   background-color: rgba(53, 73, 94, 0.95);
+  transition: all 0.5s;
 }
 .logged-in-card {
   background-color: transparent;
@@ -151,6 +209,19 @@ export default {
   font-size: 40px !important;
   margin-bottom: 0 !important;
   cursor: pointer !important;
+}
+.popup-msg {
+  position: absolute;
+  top: 56px;
+  width: 100%;
+  height: 2rem;
+  background-color: rgba(30, 136, 229, 0.7);
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: lighter;
+  user-select: none;
 }
 
 .fade-enter-active, .fade-leave-active {

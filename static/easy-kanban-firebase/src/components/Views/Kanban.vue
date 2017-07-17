@@ -1,6 +1,6 @@
 <template>
   <div class="kanban-container">
-    <auth :logged_in="logged_in"></auth>
+    <auth :logged_in.sync="logged_in"></auth>
     <div class="kanban-wrapper" v-if="logged_in">
       <filters :filter.sync="filter"></filters>
       <div class="boards-container">
@@ -8,6 +8,8 @@
         <draggable :list="kanban_data" class="dragscroll" nochilddrag>
           <board v-for="board in kanban_data" :key="board.id" :filter="filter" :board="board" :kanban="kanban_data"></board>
         </draggable>
+        <div class="boards-add-btn"></div>
+        <div class="boards-add-textarea"></div>
         <!-- <colorpicker></colorpicker> -->
       </div>
     </div>
@@ -20,6 +22,7 @@ import filters from './Kanban/filters'
 import board from './Kanban/board'
 import draggable from 'vuedraggable'
 import colorpicker from '@/components/Common/colorpicker.vue'
+import dragscroll from 'dragscroll'
 
 export default {
   components: {
@@ -31,19 +34,27 @@ export default {
   },
   data () {
     return {
-      logged_in: true,
+      logged_in: false,
       filter: '',
       kanban_data: [
-        {header: 'Todo', data: [{tag: 'good', title: 'aaa', detail: ''}, {tag: 'bad', title: 'bbb', detail: ''}, {tag: '', title: 'hhh', detail: ''}]},
-        {header: 'Doing', data: [{tag: '', title: 'ccc', detail: ''}, {tag: '', title: 'ddd', detail: ''}]},
-        {header: 'Done', data: [{tag: '', title: 'eee', detail: ''}, {tag: '', title: 'fff', detail: ''}]},
+        {header: 'Todo', data: [{tag: ['没做完', '紧急'], title: '你觉得做得完吗？', detail: ''}, {tag: ['做完'], title: '简单到没朋友', detail: ''}, {tag: [], title: 'hhh', detail: ''}]},
+        {header: 'Doing', data: [{tag: [], title: 'ccc', detail: ''}, {tag: [], title: 'ddd', detail: ''}]},
+        {header: 'Done', data: [{tag: [], title: 'eee', detail: ''}, {tag: [], title: 'fff', detail: ''}]},
         {header: 'Duplicate', data: []},
         {header: 'Backlog', data: []}
-      ]
+      ],
+      add_board: false
     }
   },
   methods: {
 
+  },
+  watch: {
+    logged_in: () => {
+      setTimeout(() => {
+        dragscroll.reset()
+      }, 500)
+    }
   }
 }
 </script>
@@ -56,6 +67,10 @@ export default {
   display: flex;
   flex-direction: row;
   background-color: #eeeeee;
+}
+body::-webkit-scrollbar {
+	width: 0;
+  height: 0;
 }
 .kanban-wrapper {
   width: calc(100% - 60px);
