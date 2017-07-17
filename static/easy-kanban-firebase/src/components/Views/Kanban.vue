@@ -34,9 +34,9 @@ export default {
       logged_in: true,
       filter: '',
       kanban_data: [
-        {header: 'Todo', data: [{tag: '', info: 'aaa'}, {tag: '', info: 'bbb'}]},
-        {header: 'Doing', data: [{tag: '', info: 'ccc'}, {tag: '', info: 'ddd'}]},
-        {header: 'Done', data: [{tag: '', info: 'eee'}, {tag: '', info: 'fff'}]},
+        {header: 'Todo', data: [{tag: 'good', title: 'aaa', detail: ''}, {tag: 'bad', title: 'bbb', detail: ''}, {tag: '', title: 'hhh', detail: ''}]},
+        {header: 'Doing', data: [{tag: '', title: 'ccc', detail: ''}, {tag: '', title: 'ddd', detail: ''}]},
+        {header: 'Done', data: [{tag: '', title: 'eee', detail: ''}, {tag: '', title: 'fff', detail: ''}]},
         {header: 'Duplicate', data: []},
         {header: 'Backlog', data: []}
       ]

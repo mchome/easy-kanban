@@ -30,6 +30,7 @@ export default {
 .filters-wrapper > i {
   font-size: 1.5rem;
   color: rgba(53, 73, 94, 0.5);
+  cursor: default;
 }
 .filters-wrapper > input {
   margin-left: 0.5rem;
