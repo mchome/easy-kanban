@@ -3,10 +3,10 @@
     <div class="board-wrapper">
       <div class="board-header">
         <p>{{ board.header }}</p>
-        <i class="material-icons">more_vert</i>
+        <i class="material-icons more-btn">more_vert</i>
       </div>
       <draggable :list="board.data" class="board-list" :options="{ group: 'kanban' }">
-        <div class="data-container" v-for="data in board.data" :key="data.id">
+        <div class="data-container" v-for="data in filteredData" :key="data.id">
           <div class="data-tag" v-for="tag in data.tag" :key="tag.id" v-if="tag">{{ tag }}</div>
           <span class="data-title">{{ data.title }}</span>
         </div>
@@ -34,6 +34,22 @@ export default {
   methods: {
     click_addbtn: function () {
 
+    }
+  },
+  computed: {
+    filteredData: function () {
+      let filter = this.filter.toLowerCase()
+      let filted = []
+      if (!filter.length) {
+        return this.board.data
+      } else {
+        for (let data of this.board.data) {
+          if (data.title.includes(filter) || data.detail.includes(filter)) {
+            filted.push(data)
+          }
+        }
+        return filted
+      }
     }
   }
 }
@@ -81,6 +97,7 @@ export default {
   margin-right: 1rem;
   width: 24px;
   transition: 0.3s all;
+  user-select: none;
 }
 .board-header > p:hover, .board-header > i:hover {
   color: rgba(255, 255, 255, 0.7);
@@ -91,6 +108,7 @@ export default {
   flex-direction: column;
   overflow: auto;
   border-radius: 3px;
+  min-height: 1.5rem;
 }
 .board-list > .data-container {
   background-color: white;
@@ -108,7 +126,6 @@ export default {
   background-color: #80D5DB;
   color: white;
   border-radius: 5px;
-  /* width: 3rem; */
   display: inline-block;
   margin: 5px;
   text-align: center;
@@ -135,6 +152,7 @@ export default {
   justify-content: center;
   border-radius: 10px;
   min-height: 1rem;
+  user-select: none;
 }
 .board-add-btn:hover {
   color: rgba(255, 255, 255, 0.7);

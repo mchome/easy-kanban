@@ -5,11 +5,11 @@
       <filters :filter.sync="filter"></filters>
       <div class="boards-container">
         <div class="margin"></div>
-        <draggable :list="kanban_data" class="dragscroll" nochilddrag>
-          <board v-for="board in kanban_data" :key="board.id" :filter="filter" :board="board" :kanban="kanban_data"></board>
+        <draggable :list="kanban_data" class="dragscroll" nochilddrag :options="{draggable:'.draggable'}">
+          <board class="draggable" v-for="board in kanban_data" :key="board.id" :filter="filter" :board="board" :kanban="kanban_data"></board>
+          <span slot="footer" class="boards-add-btn">add a board</span>
+          <div slot="footer" class="boards-add-textarea"></div>
         </draggable>
-        <div class="boards-add-btn"></div>
-        <div class="boards-add-textarea"></div>
         <!-- <colorpicker></colorpicker> -->
       </div>
     </div>
@@ -34,13 +34,13 @@ export default {
   },
   data () {
     return {
-      logged_in: false,
+      logged_in: true,
       filter: '',
       kanban_data: [
-        {header: 'Todo', data: [{tag: ['没做完', '紧急'], title: '你觉得做得完吗？', detail: ''}, {tag: ['做完'], title: '简单到没朋友', detail: ''}, {tag: [], title: 'hhh', detail: ''}]},
-        {header: 'Doing', data: [{tag: [], title: 'ccc', detail: ''}, {tag: [], title: 'ddd', detail: ''}]},
+        {header: 'Todo', data: [{tag: ['没做完', '紧急'], title: '你觉得做得完吗？', detail: 'a'}, {tag: ['做完'], title: '简单到没朋友', detail: ''}, {tag: [], title: 'hhh', detail: ''}]},
+        // {header: 'Doing', data: [{tag: [], title: 'ccc', detail: ''}, {tag: [], title: 'ddd', detail: ''}]},
         {header: 'Done', data: [{tag: [], title: 'eee', detail: ''}, {tag: [], title: 'fff', detail: ''}]},
-        {header: 'Duplicate', data: []},
+        // {header: 'Duplicate', data: []},
         {header: 'Backlog', data: []}
       ],
       add_board: false
@@ -93,5 +93,25 @@ body::-webkit-scrollbar {
 .margin {
   min-width: 1rem;
   height: 1px;
+}
+.boards-add-btn {
+  width: 16rem;
+  height: 3rem;
+  background-color: rgba(143, 17, 170, 0.35);
+  color: white;
+  margin: 1rem;
+  border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.3s;
+  user-select: none;
+}
+.boards-add-btn:hover {
+  background-color: rgba(143, 17, 170, 0.5);
+}
+.boards-add-btn:active {
+  background-color: rgba(143, 17, 170, 0.7);
 }
 </style>

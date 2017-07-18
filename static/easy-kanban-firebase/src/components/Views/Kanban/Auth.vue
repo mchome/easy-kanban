@@ -1,18 +1,18 @@
 <template>
   <div class="auth-container" :class="{'logged-in-container': logged_in}">
     <div class="auth-card" :class="{'logged-in-card': logged_in}">
-      <i v-if="!picture_url.length" @click="toggleDologin" class="auth-picture material-icons">account_circle</i>
-      <img v-if="picture_url.length" @click="toggleDologin" class="auth-picture" :src="picture_url">
+      <i v-if="!picture_url.length" @click="toggleDologin" v-on:dblclick="doLogout" class="auth-picture material-icons">account_circle</i>
+      <img v-if="picture_url.length" @click="toggleDologin" v-on:dblclick="doLogout" class="auth-picture" :src="picture_url">
 
       <transition name="fade">
         <div class="login-card" v-if="!logged_in && isDologin">
           <input type="text" v-model="login.email" placeholder="Email" spellcheck="false">
-          <input type="password" v-model="login.password" placeholder="Password" spellcheck="false">
+          <input type="password" ref="passwdform" v-model="login.password" placeholder="Password" spellcheck="false">
           <div class="submit-btn" ref="submitbtn" @click="doLogin"><p>Login</p></div>
         </div>
         <div class="signup-card" v-if="!logged_in && !isDologin">
           <input type="text" v-model="signup.email" placeholder="Account" spellcheck="false">
-          <input type="password" v-model="signup.password" placeholder="Password" spellcheck="false">
+          <input type="password" ref="passwdform" v-model="signup.password" placeholder="Password" spellcheck="false">
           <div class="submit-btn" @click="doSignup"><p>Signup</p></div>
         </div>
       </transition>
@@ -49,7 +49,6 @@ export default {
     doLogin: function (ev) {
       Firebase.auth().signInWithEmailAndPassword(this.login.email, this.login.password)
         .then(function () {
-          this.picture_url = getAvatar(this.login.email)
           this.updateAuth(true)
         }.bind(this))
         .catch(function (ev) { this.popup.msg = ev.message }.bind(this))
@@ -62,6 +61,12 @@ export default {
         }.bind(this))
         .catch(function (ev) { this.popup.msg = ev.message }.bind(this))
     },
+    doLogout: function (ev) {
+      Firebase.auth().signOut()
+        .then(function () {
+          this.updateAuth(false)
+        }.bind(this))
+    },
     toggleDologin: function () {
       this.isDologin = !this.isDologin
     },
@@ -69,14 +74,31 @@ export default {
       if (isLogin) {
         this.$refs.submitbtn.style.background = '#23d160'
         this.$refs.submitbtn.textContent = 'Succeed'
+        this.picture_url = getAvatar(this.login.email)
         setTimeout(function () {
-          this.$emit('update:logged_in', true)
           this.$refs.submitbtn.style.background = '#35495E'
           this.$refs.submitbtn.textContent = 'Login'
+          this.$emit('update:logged_in', true)
         }.bind(this), 1000)
       } else {
+        this.picture_url = ''
         this.$emit('update:logged_in', false)
       }
+    },
+    addKeybinding: function () {
+      setTimeout(function () {
+        if (!this.logged_in) {
+          this.$refs.passwdform.addEventListener('keypress', function (ev) {
+            if (ev.keyCode === 13) {
+              if (this.isDologin) {
+                this.doLogin()
+              } else {
+                this.doSignup()
+              }
+            }
+          }.bind(this))
+        }
+      }.bind(this), 100)
     }
   },
   watch: {
@@ -87,7 +109,27 @@ export default {
         }.bind(this), 5000)
       },
       deep: true
+    },
+    logged_in: function () {
+      this.addKeybinding()
+      this.login.email = ''
+      this.login.password = ''
+      this.signup.email = ''
+      this.signup.password = ''
     }
+  },
+  beforeCreate () {
+    Firebase.auth().onAuthStateChanged(user => {
+      if (user) {
+        if (!this.login.password) {
+          this.picture_url = getAvatar(user.email)
+          this.$emit('update:logged_in', true)
+        }
+      } else {
+        this.picture_url = ''
+        this.$emit('update:logged_in', false)
+      }
+    })
   }
 }
 </script>
@@ -101,7 +143,7 @@ export default {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  transition: all 0.5s;
+  transition: all 1s ease-in-out;
 }
 .auth-container .auth-picture {
   height: 80px;
@@ -111,10 +153,10 @@ export default {
   margin: 1.6rem 0;
   position: relative;
   top: 0;
-  transition: all 0.5s;
   cursor: pointer;
   border-radius: 50px;
   user-select: none;
+  transition: all 1s ease-in-out;
 }
 .auth-card > i {
   color: #35495E;
@@ -124,7 +166,7 @@ export default {
   flex-direction: column;
   width: 25%;
   height: 50%;
-  min-width: 15rem;
+  min-width: 3rem;
   min-height: 18rem;
   background-color: white;
   align-items: center;
@@ -191,7 +233,7 @@ export default {
 .logged-in-container {
   min-width: 60px;
   background-color: rgba(53, 73, 94, 0.95);
-  transition: all 0.5s;
+  transition: all 1s ease-in-out;
 }
 .logged-in-card {
   background-color: transparent;
@@ -203,7 +245,7 @@ export default {
 .logged-in-card > i, .logged-in-card > img {
   position: absolute !important;
   top: calc(100vh - 76px) !important;
-  transition: all 0.5s !important;
+  transition: all 1s ease-in-out !important;
   width: 40px !important;
   height: 40px !important;
   font-size: 40px !important;
@@ -225,9 +267,9 @@ export default {
 }
 
 .fade-enter-active, .fade-leave-active {
-  transition: opacity .1s
+  transition: opacity .3s ease-in-out;
 }
 .fade-enter, .fade-leave-to {
-  opacity: 0
+  opacity: 0;
 }
 </style>
