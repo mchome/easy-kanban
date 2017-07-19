@@ -7,15 +7,16 @@
       <transition name="fade">
         <div class="login-card" v-if="!logged_in && isDologin">
           <input type="text" v-model="login.email" placeholder="Email" spellcheck="false">
-          <input type="password" ref="passwdform" v-model="login.password" placeholder="Password" spellcheck="false">
+          <input type="password" @keyup.13="doLogin" v-model="login.password" placeholder="Password" spellcheck="false">
           <div class="submit-btn" ref="submitbtn" @click="doLogin"><p>Login</p></div>
         </div>
         <div class="signup-card" v-if="!logged_in && !isDologin">
           <input type="text" v-model="signup.email" placeholder="Account" spellcheck="false">
-          <input type="password" ref="passwdform" v-model="signup.password" placeholder="Password" spellcheck="false">
+          <input type="password" @keyup.13="doSignup" v-model="signup.password" placeholder="Password" spellcheck="false">
           <div class="submit-btn" @click="doSignup"><p>Signup</p></div>
         </div>
       </transition>
+
       <transition name="fade">
         <div class="popup-msg" v-if="popup.msg.length">{{ popup.msg }}</div>
       </transition>
@@ -84,21 +85,6 @@ export default {
         this.picture_url = ''
         this.$emit('update:logged_in', false)
       }
-    },
-    addKeybinding: function () {
-      setTimeout(function () {
-        if (!this.logged_in) {
-          this.$refs.passwdform.addEventListener('keypress', function (ev) {
-            if (ev.keyCode === 13) {
-              if (this.isDologin) {
-                this.doLogin()
-              } else {
-                this.doSignup()
-              }
-            }
-          }.bind(this))
-        }
-      }.bind(this), 100)
     }
   },
   watch: {
@@ -111,7 +97,6 @@ export default {
       deep: true
     },
     logged_in: function () {
-      this.addKeybinding()
       this.login.email = ''
       this.login.password = ''
       this.signup.email = ''
@@ -264,12 +249,5 @@ export default {
   align-items: center;
   font-weight: lighter;
   user-select: none;
-}
-
-.fade-enter-active, .fade-leave-active {
-  transition: opacity .3s ease-in-out;
-}
-.fade-enter, .fade-leave-to {
-  opacity: 0;
 }
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <div class="colorpicker-container"
+  <div class="detail-container"
       @dragenter.stop
       @dragover.stop
       @mousedown.stop
@@ -8,11 +8,8 @@
       @pointerdown.stop
       @touchmove.stop
       @touchstart.stop>
-    <div class="picker-mask"></div>
-    <div class="picker-wrapper">
-      <div class="picker-header">
-        <p>Select a color:</p>
-      </div>
+    <div class="detail-mask" @click="closeDetail"></div>
+    <div class="detail-wrapper">
     </div>
   </div>
 </template>
@@ -30,7 +27,7 @@ export default {
 
 
 <style>
-.colorpicker-container {
+.detail-container {
   position: absolute;
   top: 0;
   left: 0;
@@ -40,13 +37,13 @@ export default {
   justify-content: center;
   align-items: center;
 }
-.picker-mask {
+.detail-mask {
   width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.55);
   z-index: 10;
 }
-.picker-wrapper {
+.detail-wrapper {
   position: fixed;
   width: 30%;
   height: 40%;
@@ -56,13 +53,5 @@ export default {
   z-index: 20;
   box-shadow: 0 16px 24px 2px rgba(0,0,0,.14), 0 6px 30px 5px rgba(0,0,0,.12), 0 8px 10px -5px rgba(0,0,0,.2);
   border-radius: 2px;
-}
-.picker-header {
-}
-.picker-header > p {
-  margin-top: 1rem;
-  margin-left: 1.5rem;
-  font-size: 1.3rem;
-
 }
 </style>

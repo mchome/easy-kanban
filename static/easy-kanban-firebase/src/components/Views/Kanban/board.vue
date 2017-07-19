@@ -5,35 +5,45 @@
         <p>{{ board.header }}</p>
         <i class="material-icons more-btn">more_vert</i>
       </div>
-      <draggable :list="board.data" class="board-list" :options="{ group: 'kanban' }">
-        <div class="data-container" v-for="data in filteredData" :key="data.id">
+      <draggable :list="board.data" class="board-list" :options="{ group: 'kanban', draggable:'.data-container' }">
+        <div class="data-container" v-for="data in filteredData" :key="data.id" @click="click_addbtn">
           <div class="data-tag" v-for="tag in data.tag" :key="tag.id" v-if="tag">{{ tag }}</div>
           <span class="data-title">{{ data.title }}</span>
         </div>
       </draggable>
-      <div class="board-add-btn">add a task</div>
+      <div class="board-add-btn" @click="click_addbtn">add a task</div>
       <div class="board-add-textarea" v-if="add_task"></div>
     </div>
     <div class="margin"></div>
+    <transition name="fade">
+      <colorpicker v-if="colorpicker_open" :open.sync="colorpicker_open"></colorpicker>
+      <detail v-if="detail_open" :open.sync="detail_open"></detail>
+    </transition>
   </div>
 </template>
 
 <script>
 import draggable from 'vuedraggable'
+import colorpicker from '@/components/Common/colorpicker.vue'
+import detail from './detail'
 
 export default {
   components: {
-    draggable
+    draggable,
+    colorpicker,
+    detail
   },
   props: ['filter', 'board', 'kanban'],
   data () {
     return {
-      add_task: false
+      add_task: false,
+      detail_open: false,
+      colorpicker_open: false
     }
   },
   methods: {
     click_addbtn: function () {
-
+      this.detail_open = true
     }
   },
   computed: {
