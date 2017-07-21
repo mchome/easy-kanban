@@ -2351,12 +2351,6 @@ globby@^5.0.0:
     pify "^2.0.0"
     pinkie-promise "^2.0.0"
 
-google-material-color@^1.3.1:
-  version "1.3.1"
-  resolved "http://registry.npm.taobao.org/google-material-color/download/google-material-color-1.3.1.tgz#98082d4ed86af43bb3ab11c49a81eb99caca1056"
-  dependencies:
-    lodash "^2.4.1"
-
 got@^5.0.0:
   version "5.7.1"
   resolved "http://registry.npm.taobao.org/got/download/got-5.7.1.tgz#5f81635a61e4a6589f180569ea4e381680a51f35"
@@ -3103,10 +3097,6 @@ lodash.templatesettings@^4.0.0:
 lodash.uniq@^4.5.0:
   version "4.5.0"
   resolved "http://registry.npm.taobao.org/lodash.uniq/download/lodash.uniq-4.5.0.tgz#d0225373aeb652adc1bc82e4945339a842754773"
-
-lodash@^2.4.1:
-  version "2.4.2"
-  resolved "http://registry.npm.taobao.org/lodash/download/lodash-2.4.2.tgz#fadd834b9683073da179b3eae6d9c0d15053f73e"
 
 lodash@^4.0.0, lodash@^4.14.0, lodash@^4.17.2, lodash@^4.17.3, lodash@^4.17.4, lodash@^4.2.0, lodash@^4.3.0:
   version "4.17.4"

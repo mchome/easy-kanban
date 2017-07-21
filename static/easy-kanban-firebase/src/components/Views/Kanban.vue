@@ -3,10 +3,11 @@
     <auth :logged_in.sync="logged_in"></auth>
     <div class="kanban-wrapper" v-if="logged_in">
       <filters :filter.sync="filter"></filters>
+      <selector></selector>
       <div class="boards-container">
         <div class="margin"></div>
-        <draggable :list="kanban_data" class="dragscroll" ref="kanbanScroll" nochilddrag :options="{ draggable:'.board-draggable' }">
-          <board class="board-draggable" v-for="board in kanban_data" :key="board.id" :filter="filter" :board="board" :kanban="kanban_data"></board>
+        <draggable :list="kanban_data.data" class="dragscroll" ref="kanbanScroll" nochilddrag :options="{ draggable:'.board-draggable' }">
+          <board class="board-draggable" v-for="board in kanban_data.data" :key="board.id" :filter="filter" :board.sync="board" :kanban="kanban_data.data"></board>
           <span slot="footer" class="boards-add-btn">
             <p v-if="!add_board.switch" @click="add_board.switch = true">add a board</p>
             <input type="text" slot="footer" v-if="add_board.switch" v-model="add_board.text" class="boards-add-input" spellcheck="false">
@@ -22,30 +23,34 @@
 
 <script>
 import dragscroll from 'dragscroll'
+import draggable from 'vuedraggable'
 
 import auth from './Kanban/auth'
 import filters from './Kanban/filters'
 import board from './Kanban/board'
-import draggable from 'vuedraggable'
+import selector from './Kanban/selector'
 
 export default {
   components: {
     auth,
     board,
     filters,
+    selector,
     draggable
   },
   data () {
     return {
       logged_in: true,
       filter: '',
-      kanban_data: [
-        {header: 'Todo', data: [{tag: ['没做完', '紧急'], title: '你觉得做得完吗？', detail: 'a'}, {tag: ['做完'], title: '简单到没朋友', detail: ''}, {tag: [], title: 'hhh', detail: ''}]},
-        // {header: 'Doing', data: [{tag: [], title: 'ccc', detail: ''}, {tag: [], title: 'ddd', detail: ''}]},
-        {header: 'Done', data: [{tag: [], title: 'eee', detail: ''}, {tag: [], title: 'fff', detail: ''}]},
-        // {header: 'Duplicate', data: []},
-        {header: 'Backlog', data: []}
-      ],
+      kanban_data: {
+        title: 'default',
+        data: [
+              {header: 'Todo', content: [{tag: ['没做完', '紧急'], title: '你觉得做得完吗？', detail: 'a'}, {tag: ['做完'], title: '简单到没朋友', detail: ''}, {tag: [], title: 'hhh', detail: ''}]},
+              {header: 'Doing', content: [{tag: [], title: 'ccc', detail: ''}, {tag: [], title: 'ddd', detail: ''}]},
+              {header: 'Done', content: [{tag: [], title: 'EEE', detail: ''}, {tag: [], title: 'fff', detail: ''}]},
+              {header: 'Duplicate', content: []},
+              {header: 'Backlog', content: []}]
+      },
       add_board: {
         switch: false,
         text: ''
@@ -55,7 +60,7 @@ export default {
   methods: {
     addBoard: function () {
       if (this.add_board.text.length) {
-        this.kanban_data.push({header: this.add_board.text, data: []})
+        this.kanban_data.data.push({header: this.add_board.text, content: []})
         setTimeout(() => {
           this.$refs.kanbanScroll.$el.scrollTo({'behavior': 'smooth', 'left': 9999})
           dragscroll.reset()

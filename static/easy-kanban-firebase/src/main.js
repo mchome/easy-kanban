@@ -9,8 +9,6 @@ Vue.config.productionTip = false
 
 import '@/fonts/material-design-icons/material-icons.css'
 import 'dragscroll'
-import 'google-material-color/dist/palette.js'
-import 'google-material-color/dist/palette.styl'
 
 Vue.use(VueFire)
 

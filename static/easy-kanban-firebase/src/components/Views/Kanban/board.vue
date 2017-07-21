@@ -5,19 +5,21 @@
         <p>{{ board.header }}</p>
         <i class="material-icons more-btn">more_vert</i>
       </div>
-      <draggable :list="board.data" class="board-list" :options="{ group: 'kanban', draggable:'.data-container' }">
-        <div class="data-container" v-for="data in filteredData" :key="data.id" @click="click_addbtn">
+      <draggable :list="board.content" class="board-list" :options="{ group: 'kanban', draggable:'.data-container' }">
+        <div class="data-container" v-for="(data, id) in filteredData" :key="id" @click="taskEdit(data, id)">
           <div class="data-tag" v-for="tag in data.tag" :key="tag.id" v-if="tag">{{ tag }}</div>
           <span class="data-title">{{ data.title }}</span>
         </div>
       </draggable>
-      <div class="board-add-btn" @click="click_addbtn">add a task</div>
-      <div class="board-add-textarea" v-if="add_task"></div>
+      <div class="board-add-btn" @click="taskAdd">add a task</div>
     </div>
     <div class="margin"></div>
     <transition name="fade">
+      <detail v-if="detail_open.switch"
+              :open.sync="detail_open.switch"
+              :type="detail_open.type"
+              :data="detail_open.data"></detail>
       <colorpicker v-if="colorpicker_open" :open.sync="colorpicker_open"></colorpicker>
-      <detail v-if="detail_open" :open.sync="detail_open"></detail>
     </transition>
   </div>
 </template>
@@ -36,14 +38,24 @@ export default {
   props: ['filter', 'board', 'kanban'],
   data () {
     return {
-      add_task: false,
-      detail_open: false,
+      detail_open: {
+        switch: false,
+        type: 'add',
+        data: {}
+      },
       colorpicker_open: false
     }
   },
+  watch: {
+
+  },
   methods: {
-    click_addbtn: function () {
-      this.detail_open = true
+    taskAdd: function () {
+      this.detail_open = {switch: true, type: 'add', data: {}}
+    },
+    taskEdit: function (data, id) {
+      console.log(id)
+      this.detail_open = {switch: true, type: 'edit', data: data}
     }
   },
   computed: {
@@ -51,10 +63,10 @@ export default {
       let filter = this.filter.toLowerCase()
       let filted = []
       if (!filter.length) {
-        return this.board.data
+        return this.board.content
       } else {
-        for (let data of this.board.data) {
-          if (data.title.includes(filter) || data.detail.includes(filter)) {
+        for (let data of this.board.content) {
+          if (data.title.toLowerCase().includes(filter) || data.detail.toLowerCase().includes(filter)) {
             filted.push(data)
           }
         }

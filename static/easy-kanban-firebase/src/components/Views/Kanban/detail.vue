@@ -10,16 +10,52 @@
       @touchstart.stop>
     <div class="detail-mask" @click="closeDetail"></div>
     <div class="detail-wrapper">
+      <div class="detail-header">
+        <p v-if="type === 'add'">Adding task</p>
+        <p v-if="type === 'edit'">Editing task</p>
+      </div>
+      <div class="detail-title">
+        <i class="material-icons detail-logo">short_text</i>
+        <input type="text" v-model="data.title" placeholder="type the title" spellcheck="false">
+      </div>
+      <div class="detail-tags">
+        <div class="tag-display">
+          <i class="material-icons detail-logo">bookmark</i>
+          <div class="data-tag" v-for="(tag, id) in data.tag" :key="id" v-if="tag" v-on:dblclick="data.tag.splice(id, 1)">{{ tag }}</div>
+        </div>
+        <transition name="fade">
+          <div class="tag-edit" v-if="this.data.tag.length < 5">
+            <input type="text" v-model="add_tag" placeholder="type a tag" spellcheck="false">
+            <button @click="addTag">add tag</button>
+          </div>
+        </transition>
+      </div>
+      <div class="detail-content">
+        <i class="material-icons detail-logo">note</i>
+        <textarea v-model="data.detail" placeholder="type some detail" spellcheck="false"></textarea>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
 export default {
-  props: ['open'],
+  props: ['open', 'type', 'data'],
   methods: {
     closeDetail: function () {
+      // this.$emit('update:data', this.data)
       this.$emit('update:open', false)
+    },
+    addTag: function () {
+      if (this.add_tag) {
+        this.data.tag.push(this.add_tag)
+        this.add_tag = ''
+      }
+    }
+  },
+  data () {
+    return {
+      add_tag: ''
     }
   }
 }
@@ -36,6 +72,8 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+  cursor: default;
+  user-select: none;
 }
 .detail-mask {
   width: 100%;
@@ -47,11 +85,126 @@ export default {
   position: fixed;
   width: 30%;
   height: 40%;
-  min-width: 12rem;
-  min-height: 12rem;
+  min-width: 20rem;
+  min-height: 20rem;
   background-color: white;
   z-index: 20;
   box-shadow: 0 16px 24px 2px rgba(0,0,0,.14), 0 6px 30px 5px rgba(0,0,0,.12), 0 8px 10px -5px rgba(0,0,0,.2);
   border-radius: 2px;
+  display: flex;
+  flex-direction: column;
+}
+.detail-wrapper > .detail-header {
+  background-color: #35495E;
+  color: white;
+}
+.detail-wrapper > .detail-header > p {
+  font-size: 1.2rem;
+  margin-left: 1.5rem;
+}
+.detail-title {
+  height: 3rem;
+  display: flex;
+  align-items: center;
+  margin-left: 1rem;
+}
+.detail-title > input {
+  border: none;
+  outline: none;
+  font-size: 1rem;
+  width: 80%;
+  margin-left: 0.5rem;
+  color: #35495E;
+  border-bottom: 1px #35495E solid;
+  transition: all 0.3s;
+}
+.detail-title > input::-webkit-input-placeholder {
+  color: rgba(53, 73, 94, 0.6);
+}
+.detail-title > input:focus {
+  border-bottom: 1px dodgerblue solid;
+}
+.detail-content {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+}
+.detail-tags {
+  max-height: 4rem;
+  display: flex;
+  flex-direction: column;
+  margin-left: 1rem;
+  margin-bottom: 0.8rem;
+}
+.detail-tags > .tag-display {
+  display: flex;
+  align-items: center;
+}
+.detail-tags i {
+  margin-right: 0.25rem;
+}
+.detail-tags > .tag-edit {
+  display: flex;
+  flex-direction: row;
+}
+.detail-tags > .tag-display > .data-tag {
+  cursor: pointer;
+}
+.tag-edit > input {
+  border: none;
+  outline: none;
+  font-size: 1rem;
+  width: 60%;
+  margin-top: 0.5rem;
+  margin-left: 2rem;
+  color: #35495E;
+  border-bottom: 1px #35495E solid;
+  transition: all 0.3s;
+}
+.tag-edit > input::-webkit-input-placeholder {
+  color: rgba(53, 73, 94, 0.6);
+}
+.tag-edit > input:focus {
+  border-bottom: 1px dodgerblue solid;
+}
+.tag-edit > button {
+  background-color: #35495E;
+  color: white;
+  border: none;
+  outline: none;
+  border-radius: 5px;
+  margin-left: 1.3rem;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+.tag-edit > button:hover {
+  background-color: rgba(53, 73, 94, 0.8);
+}
+.tag-edit > button:active {
+  background-color: rgba(53, 73, 94, 0.2);
+  color: #35495E;
+}
+
+.detail-content {
+  display: flex;
+  align-items: flex-start;
+  margin-left: 1rem;
+}
+.detail-content > textarea {
+  height: 8rem;
+  width: 20rem;
+  margin-left: 0.5rem;
+  resize: none;
+  border: none;
+  outline: none;
+  color: #35495E;
+}
+.detail-content > textarea::-webkit-input-placeholder {
+  color: rgba(53, 73, 94, 0.6);
+}
+
+.detail-logo {
+  font-size: 1.5rem;
+  color: #35495E;
 }
 </style>
