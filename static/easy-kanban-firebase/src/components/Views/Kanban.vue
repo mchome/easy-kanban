@@ -9,8 +9,8 @@
         <draggable :list="kanban_data.data" class="dragscroll" ref="kanbanScroll" nochilddrag :options="{ draggable:'.board-draggable' }">
           <board class="board-draggable" v-for="board in kanban_data.data" :key="board.id" :filter="filter" :board.sync="board" :kanban="kanban_data.data"></board>
           <span slot="footer" class="boards-add-btn">
-            <p v-if="!add_board.switch" @click="add_board.switch = true">add a board</p>
-            <input type="text" slot="footer" v-if="add_board.switch" v-model="add_board.text" class="boards-add-input" spellcheck="false">
+            <p v-if="!add_board.switch" @click="clickAddboard">add a board</p>
+            <input type="text" slot="footer" v-if="add_board.switch" v-model="add_board.text" class="boards-add-input" ref="addboardinput" spellcheck="false">
             <i class="material-icons" v-if="add_board.switch" @click="addBoard">add_box</i>
             <i class="material-icons" v-if="add_board.switch" @click="cancelEdit">clear</i>
           </span>
@@ -44,6 +44,7 @@ export default {
       filter: '',
       kanban_data: {
         title: 'default',
+        titleid: 'KS93KS72d',
         data: [
               {header: 'Todo', content: [{tag: ['没做完', '紧急'], title: '你觉得做得完吗？', detail: 'a'}, {tag: ['做完'], title: '简单到没朋友', detail: ''}, {tag: [], title: 'hhh', detail: ''}]},
               {header: 'Doing', content: [{tag: [], title: 'ccc', detail: ''}, {tag: [], title: 'ddd', detail: ''}]},
@@ -70,6 +71,12 @@ export default {
     },
     cancelEdit: function () {
       this.add_board = {switch: false, text: ''}
+    },
+    clickAddboard: function () {
+      this.add_board.switch = true
+      setTimeout(function () {
+        this.$refs.addboardinput.focus()
+      }.bind(this), 100)
     }
   },
   watch: {
@@ -99,7 +106,7 @@ body::-webkit-scrollbar {
   width: calc(100% - 60px);
 }
 .boards-container {
-  width: 100%;
+  width: calc(100% - 1rem);
   height: calc(100% - 70px);
   display: flex;
   flex-direction: row;

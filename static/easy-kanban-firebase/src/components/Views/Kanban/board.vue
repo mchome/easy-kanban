@@ -6,19 +6,22 @@
         <i class="material-icons more-btn">more_vert</i>
       </div>
       <draggable :list="board.content" class="board-list" :options="{ group: 'kanban', draggable:'.data-container' }">
-        <div class="data-container" v-for="(data, id) in filteredData" :key="id" @click="taskEdit(data, id)">
+        <div class="data-container" v-for="(data, id) in filteredData" :key="id" @click="taskClickEdit(data, id)">
           <div class="data-tag" v-for="tag in data.tag" :key="tag.id" v-if="tag">{{ tag }}</div>
           <span class="data-title">{{ data.title }}</span>
         </div>
       </draggable>
-      <div class="board-add-btn" @click="taskAdd">add a task</div>
+      <div class="board-add-btn" @click="taskClickadd">add a task</div>
     </div>
     <div class="margin"></div>
     <transition name="fade">
       <detail v-if="detail_open.switch"
               :open.sync="detail_open.switch"
               :type="detail_open.type"
-              :data="detail_open.data"></detail>
+              :data="detail_open.data"
+              :pt.sync="pt"
+              @taskadd="taskAdd"
+              @taskremove="taskRemove"></detail>
       <colorpicker v-if="colorpicker_open" :open.sync="colorpicker_open"></colorpicker>
     </transition>
   </div>
@@ -43,19 +46,29 @@ export default {
         type: 'add',
         data: {}
       },
-      colorpicker_open: false
+      colorpicker_open: false,
+      pt: false
     }
   },
-  watch: {
-
-  },
   methods: {
-    taskAdd: function () {
+    taskClickadd: function () {
       this.detail_open = {switch: true, type: 'add', data: {}}
     },
-    taskEdit: function (data, id) {
-      console.log(id)
+    taskClickEdit: function (data, id) {
+      if (this.filter.length) {
+        this.pt = false
+      } else {
+        this.pt = id
+      }
       this.detail_open = {switch: true, type: 'edit', data: data}
+    },
+    taskAdd: function () {
+
+    },
+    taskRemove: function () {
+      if (this.pt !== false) {
+        this.board.content.splice(this.pt, 1)
+      }
     }
   },
   computed: {

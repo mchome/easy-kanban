@@ -13,6 +13,7 @@
       <div class="detail-header">
         <p v-if="type === 'add'">Adding task</p>
         <p v-if="type === 'edit'">Editing task</p>
+        <i v-if="(type === 'edit') && (pt !== false)" class="material-icons" @click="deleteTask">delete</i>
       </div>
       <div class="detail-title">
         <i class="material-icons detail-logo">short_text</i>
@@ -40,7 +41,7 @@
 
 <script>
 export default {
-  props: ['open', 'type', 'data'],
+  props: ['open', 'type', 'data', 'pt'],
   methods: {
     closeDetail: function () {
       // this.$emit('update:data', this.data)
@@ -51,6 +52,11 @@ export default {
         this.data.tag.push(this.add_tag)
         this.add_tag = ''
       }
+    },
+    deleteTask: function () {
+      this.$emit('taskremove')
+      this.$emit('update:pt', false)
+      this.closeDetail()
     }
   },
   data () {
@@ -97,10 +103,24 @@ export default {
 .detail-wrapper > .detail-header {
   background-color: #35495E;
   color: white;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
 }
 .detail-wrapper > .detail-header > p {
   font-size: 1.2rem;
   margin-left: 1.5rem;
+}
+.detail-wrapper > .detail-header > i {
+  margin-left: 53%;
+  cursor: pointer;
+  padding: 0.3rem;
+  background-color: #f44336;
+  border-radius: 50px;
+  transition: all 0.3s;
+}
+.detail-wrapper > .detail-header > i:hover {
+  background-color: rgba(244, 67, 54, 0.8);
 }
 .detail-title {
   height: 3rem;
@@ -172,7 +192,7 @@ export default {
   color: white;
   border: none;
   outline: none;
-  border-radius: 5px;
+  border-radius: 2px;
   margin-left: 1.3rem;
   cursor: pointer;
   transition: all 0.3s;
@@ -192,12 +212,18 @@ export default {
 }
 .detail-content > textarea {
   height: 8rem;
-  width: 20rem;
+  width: 84%;
+  max-width: 19.5rem;
   margin-left: 0.5rem;
   resize: none;
   border: none;
   outline: none;
   color: #35495E;
+  border-bottom: 1px #35495E solid;
+  transition: all 0.3s;
+}
+.detail-content > textarea:focus {
+  border-bottom: 1px dodgerblue solid;
 }
 .detail-content > textarea::-webkit-input-placeholder {
   color: rgba(53, 73, 94, 0.6);
